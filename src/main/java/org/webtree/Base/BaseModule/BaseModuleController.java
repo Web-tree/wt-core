@@ -1,5 +1,5 @@
-﻿package org.webtree.Base.BaseModule;
-
+package org.webtree.Base.BaseModule;
+ 
 import org.webtree.Base.MVC.BaseController;
 import org.webtree.Base.MVC.BaseView;
 import org.webtree.Language.Model.LanguageModel;

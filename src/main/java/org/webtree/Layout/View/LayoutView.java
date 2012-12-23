@@ -37,4 +37,9 @@ public class LayoutView extends HtmlView {
 		data.put("menu", MenuModelList.getMenu());
 		return data;
 	}
+
+	@Override
+	public String parse() {
+		return parseView();
+	}
 }
