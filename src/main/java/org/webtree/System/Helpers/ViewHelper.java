@@ -56,4 +56,8 @@ public class ViewHelper {
 		return ProjectSettings.get("baseUrl");
 	}
 
+	public int getCurrentHumanId(){
+		return getAuthModel().getHumanId();
+	}
+
 }

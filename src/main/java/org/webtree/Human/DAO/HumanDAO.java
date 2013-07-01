@@ -27,23 +27,30 @@ public class HumanDAO extends SqlDAO {
 
 	protected int peopleOnPage = 50;
 
-	public int create(HumanModel humanModel) throws SQLException {
+	public int create(HumanModel humanModel) {
 		PreparedStatement statement = getStatement(createStatement, Statement.RETURN_GENERATED_KEYS);
-		statement.setString(1, humanModel.getName());
-		statement.executeUpdate();
-		ResultSet resultSet = statement.getGeneratedKeys();
-		resultSet.next();
-		return resultSet.getInt(1);
+		try {
+			statement.setString(1, humanModel.getName());
+			statement.executeUpdate();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			resultSet.next();
+			return resultSet.getInt(1);
+		} catch (SQLException e) {
+			throw new SqlDAOError(e);
+		}
 	}
 
-	public void edit(HumanModel humanModel) throws SQLException {
+	public void edit(HumanModel humanModel) {
 		String updateSet = buildUpdateSet(humanModel.toHashMap());
 		String sql = String.format(editStatement, updateSet);
 		PreparedStatement statement = getStatement(sql);
 
-		statement.setInt(1, humanModel.getId());
-
-		statement.execute();
+		try {
+			statement.setInt(1, humanModel.getId());
+			statement.execute();
+		} catch (SQLException e) {
+			throw new SqlDAOError(e);
+		}
 	}
 
 	public HumanModel get(int id) throws ItemNotFound {
@@ -88,20 +95,20 @@ public class HumanDAO extends SqlDAO {
 	}
 
 	public HumanModelList getHumanList(int page) {
-		try {
-			PreparedStatement statement = getStatement("SELECT * FROM human WHERE hidden = false ORDER BY rate LIMIT " + peopleOnPage + " OFFSET " + getOffset(page, peopleOnPage));
-			HumanModelList humanList = new HumanModelList();
-			fillModelList(humanList, statement);
-			return humanList;
-		} catch (SQLException | SqlDAOException e) {
-			throw new LoggedError(e);
-		}
+		PreparedStatement statement = getStatement("SELECT * FROM human WHERE hidden = false ORDER BY rate LIMIT " + peopleOnPage + " OFFSET " + getOffset(page, peopleOnPage));
+		HumanModelList humanList = new HumanModelList();
+		fillModelList(humanList, statement);
+		return humanList;
 	}
 
-	public void delete(int id) throws SQLException {
+	public void delete(int id) {
 		PreparedStatement statement = getStatement(delStatement);
-		statement.setInt(1, id);
-		statement.execute();
+		try {
+			statement.setInt(1, id);
+			statement.execute();
+		} catch (SQLException e) {
+			throw new SqlDAOError(e);
+		}
 	}
 
 	public int getHumanRate(int humanId) throws ItemNotFound {
@@ -119,7 +126,7 @@ public class HumanDAO extends SqlDAO {
 	}
 
 	@Override
-	protected HumanModel buildModel(ResultSet resultSet) throws SqlDAOException {
+	protected HumanModel buildModel(ResultSet resultSet) throws SqlDAOError {
 		try {
 			HumanModel humanModel = new HumanModel();
 			humanModel.setId(Integer.parseInt(resultSet.getString("humanId")));
@@ -127,7 +134,7 @@ public class HumanDAO extends SqlDAO {
 			humanModel.setRate(resultSet.getInt("rate"));
 			return humanModel;
 		} catch (SQLException e) {
-			throw new SqlDAOException(e);
+			throw new SqlDAOError(e);
 		}
 	}
 

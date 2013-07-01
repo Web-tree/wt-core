@@ -24,8 +24,8 @@ public class MenuModelList extends BaseModelList<MenuModel> {
 			try {
 				AuthModel authModel = Auth.getInst().getAuthModel();
 				menuList.add(new MenuModel("human/" + authModel.getHumanId(), "Я"));
-			} catch (Auth.NeedAuth needAuth) {
-				throw new LoggedError("Error with check auth!", needAuth);
+			} catch (Auth.AuthRequired authRequired) {
+				throw new LoggedError("Error with check auth!", authRequired);
 			}
 		} else {
 			menuList.add(new MenuModel("auth/login", "Вход"));

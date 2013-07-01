@@ -7,6 +7,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.webtree.Base.MVC.BaseView;
 import org.webtree.Layout.Controller.LayoutController;
+import org.webtree.System.Exception.LoggedError;
 import org.webtree.System.Exception.MessageException;
 import org.webtree.System.Helpers.ViewHelper;
 import org.webtree.System.Log;
@@ -19,6 +20,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lucifer
@@ -101,19 +103,18 @@ abstract public class BaseModuleView extends BaseView {
 		return getTemplate(name, dir);
 	}
 
-	public String processTemplate(Object object, Template template) {
+	public String processTemplate(Template template) {
 		Writer writer = new StringWriter();
 		try {
-			template.process(getDefaultMap(object), writer);
+			template.process(getDefaultMap(), writer);
 		} catch (TemplateException | IOException e) {
-			Log.getInst().error("Template process error", e);
-			throw new Error(e);
+			throw new LoggedError("Template process error", e);
 		}
 		return writer.toString();
 	}
 
-	public String processTemplate(Object object, String templateName) {
-		return processTemplate(object, getTemplate(templateName));
+	public String processTemplate(String templateName) {
+		return processTemplate(getTemplate(templateName));
 	}
 
 	protected Configuration getTemplateConf(String dir) {
@@ -146,16 +147,18 @@ abstract public class BaseModuleView extends BaseView {
 		return json.toString();
 	}
 
-	protected HashMap<String, Object> getDefaultMap(Object object) {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("content", object);
+	protected Map<String, Object> getDefaultMap() {
+		Map<String, Object> map = getData();
 		map.put("helper", getViewHelper());
 		map.put("messages", getMessages());
 		map.put("currentMenu", currentMenu);
+		if (this instanceof Editable) {
+			map.put("editable", ((Editable)this).isEditable());
+		}
 		return map;
 	}
 
 	protected String parseView() {
-		return processTemplate(getData(), getTemplate(templateName(), "module/" + templateDirectory()));
+		return processTemplate(getTemplate(templateName(), "module/" + templateDirectory()));
 	}
 }

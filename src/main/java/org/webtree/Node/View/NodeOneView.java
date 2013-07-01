@@ -1,6 +1,6 @@
 package org.webtree.Node.View;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author lucifer
@@ -19,9 +19,8 @@ public class NodeOneView extends NodeView {
 	}
 
 	@Override
-	protected HashMap<String, Object> getDefaultMap(Object object) {
-		HashMap<String, Object> defaultMap = super.getDefaultMap(object);
-		defaultMap.put("editable", editable);
+	protected Map<String, Object> getDefaultMap() {
+		Map<String, Object> defaultMap = super.getDefaultMap();
 		return defaultMap;
 	}
 }

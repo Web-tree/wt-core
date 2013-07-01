@@ -7,7 +7,7 @@ import net.sf.json.JSONObject;
  *         Date: 30.06.12
  *         Time: 18:45
  */
-abstract public class MessageException extends WebTreeException {
+abstract public class MessageException extends WebTreeRuntime {
 	protected String name;
 
 	abstract public String getStatus();

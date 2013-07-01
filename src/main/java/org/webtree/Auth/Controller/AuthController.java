@@ -6,12 +6,12 @@ import org.webtree.Auth.View.LoginView;
 import org.webtree.Auth.View.MainView;
 import org.webtree.Auth.View.RegisterView;
 import org.webtree.Base.BaseModule.BaseModuleController;
+import org.webtree.Base.DAO.SqlDAO;
 import org.webtree.Human.Controller.HumanController;
 import org.webtree.System.*;
 import org.webtree.System.Exception.MessageException;
 import org.webtree.System.Helpers.RequestHelper;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +25,7 @@ public class AuthController extends BaseModuleController {
 	protected AuthDAO authDAO;
 
 	@Override
-	public String process(List<String> params) throws Router.RedirectSystemError, IOException, Router.RedirectPageNotFound, Router.Redirect, SQLException, MessageException.ErrorMessage {
+	public String process(List<String> params) {
 		AuthView view;
 		switch (getActionByParam(params)) {
 			case "register":
@@ -74,8 +74,12 @@ public class AuthController extends BaseModuleController {
 		}
 	}
 
-	public int register(String email, String password) throws SQLException, MessageException.ErrorMessage, AuthDAO.LoginIncorrect, AuthDAO.LoginExists {
-		getAuthDAO().checkLogin(email);
+	public int register(String email, String password) throws AuthDAO.LoginExists, AuthDAO.LoginIncorrect {
+		try {
+			getAuthDAO().checkLogin(email);
+		} catch (SqlDAO.SqlDAOError e) {
+			throw new Router.RedirectSystemError(e);
+		}
 
 		HumanController humanController = new HumanController();
 		try {
@@ -91,6 +95,9 @@ public class AuthController extends BaseModuleController {
 				throw new Error("Start session error after register", e);
 			}
 			return humanId;
+		} catch (SQLException e) {
+			WtDb.rollback();
+			throw new MessageException.ErrorMessage("");
 		} catch (AuthDAO.LoginExists | AuthDAO.LoginIncorrect e) {
 			WtDb.rollback();
 			throw new MessageException.ErrorMessage(e.getMessage());

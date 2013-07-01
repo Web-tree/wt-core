@@ -1,14 +1,14 @@
 package org.webtree.System.Exception;
 
 /**
- * @author lucifer
- *         Date: 27.06.12
- *         Time: 22:03
+ * @author Max Levicky
+ *         Date: 30.06.13
+ *         Time: 8:45
  */
-abstract public class WebTreeException extends Exception {
+public class WebTreeRuntime extends RuntimeException {
 	protected String message;
 
-	public String getDefaultMessage() {
+	public String getDefaultMessage(){
 		return "";
 	}
 
@@ -37,7 +37,7 @@ abstract public class WebTreeException extends Exception {
 	 *                unknown.)
 	 * @since 1.4
 	 */
-	public WebTreeException(String message, Throwable cause) {
+	public WebTreeRuntime(String message, Throwable cause) {
 		super(cause);
 		setMessage(message);
 	}
@@ -50,7 +50,7 @@ abstract public class WebTreeException extends Exception {
 	 * @param message the detail message. The detail message is saved for
 	 *                later retrieval by the {@link #getMessage} method.
 	 */
-	public WebTreeException(String message) {
+	public WebTreeRuntime(String message) {
 		setMessage(message);
 	}
 
@@ -59,7 +59,7 @@ abstract public class WebTreeException extends Exception {
 	 * The cause is not initialized, and may subsequently be initialized by a
 	 * call to {@link #initCause}.
 	 */
-	public WebTreeException() {
+	public WebTreeRuntime() {
 		setMessage(getDefaultMessage());
 	}
 
@@ -77,7 +77,7 @@ abstract public class WebTreeException extends Exception {
 	 *              unknown.)
 	 * @since 1.4
 	 */
-	public WebTreeException(Throwable cause) {
+	public WebTreeRuntime(Throwable cause) {
 
 		super(cause);
 	}

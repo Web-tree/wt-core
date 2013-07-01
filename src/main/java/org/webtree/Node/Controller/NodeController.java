@@ -16,7 +16,6 @@ import org.webtree.System.Exception.MessageException;
 import org.webtree.System.Helpers.RequestHelper;
 import org.webtree.System.Router;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class NodeController extends BaseModuleController {
 		nodeDAO.edit(nodeModel);
 	}
 
-	public NodeModel getNode(int id) throws ItemNotFound, SqlDAO.SqlDAOException {
+	public NodeModel getNode(int id) throws ItemNotFound, SqlDAO.SqlDAOError {
 		return nodeDAO.get(id);
 	}
 
@@ -52,7 +51,7 @@ public class NodeController extends BaseModuleController {
 	}
 
 	@Override
-	public String process(List<String> params) throws IOException, Router.RedirectPageNotFound, Router.Redirect {
+	public String process(List<String> params) {
 		String action = "";
 		try {
 			action = params.get(1);
@@ -70,19 +69,19 @@ public class NodeController extends BaseModuleController {
 				}
 				view = new NodeListView();
 				try {
-					NodeModelList humanList;
+					NodeModelList nodes;
 					switch (listMode) {
 						case "my":
-							humanList = nodeDAO.getHumanList(Auth.getInst().getAuthModel().getHumanId());
+							nodes = nodeDAO.getHumanList(Auth.getInst().getAuthModel().getHumanId());
 							break;
 						case "":
 						default:
-							humanList = nodeDAO.getList();
+							nodes = nodeDAO.getList();
 					}
-					view.setData(humanList);
+					view.setData(nodes);
 				} catch (NodeDAO.NodeException e) {
-					view.addMessage(new MessageException.ErrorMessage("Ошибка при получении листа."));
-				} catch (Auth.NeedAuth needAuth) {
+					view.addMessage(new MessageException.ErrorMessage("Ошибка при получении списка."));
+				} catch (Auth.AuthRequired authRequired) {
 					view.addMessage(new MessageException.WarningMessage("Для того, что бы посмотреть свои ноды, надо представиться."));
 				}
 				break;
@@ -93,7 +92,7 @@ public class NodeController extends BaseModuleController {
 						Auth.getInst().needAuth();
 						view.setData(actionCreate());
 						view.addMessage(new MessageException.InfoMessage("Нод успешно создан."));
-					} catch (CreateError | Auth.NeedAuth e) {
+					} catch (CreateError | Auth.AuthRequired e) {
 						view.addMessage(e);
 					}
 				}
@@ -110,7 +109,7 @@ public class NodeController extends BaseModuleController {
 					NodeModel nodeModel = nodeDAO.get(Integer.parseInt(params.get(2)));
 					view.setData(nodeModel);
 					view.setEditable(editAvailable(nodeModel.getOwnerId()));
-				} catch (SqlDAO.SqlDAOException e) {
+				} catch (SqlDAO.SqlDAOError e) {
 					view.addMessage(new MessageException.ErrorMessage("Произошла ошибка."));
 				} catch (ItemNotFound itemNotFound) {
 					view.addMessage(new MessageException.ErrorMessage(itemNotFound.getMessage()));
@@ -122,7 +121,7 @@ public class NodeController extends BaseModuleController {
 		return view.parse();
 	}
 
-	public NodeModel actionCreate() throws CreateError, Auth.NeedAuth {
+	public NodeModel actionCreate() throws CreateError, Auth.AuthRequired {
 		NodeModel nodeModel = new NodeModel();
 		nodeModel.setOwnerId(Auth.getInst().getAuthModel().getHumanId());
 		try {

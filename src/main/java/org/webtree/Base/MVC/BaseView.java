@@ -2,6 +2,9 @@ package org.webtree.Base.MVC;
 
 import org.webtree.System.Exception.WebTreeException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Lucifer
@@ -13,25 +16,20 @@ abstract public class BaseView {
 	public enum FORMAT {
 		HTML, JSON, PLAIN
 	}
-	protected Object data;
-	protected boolean editable;
+	protected Map<String, Object> data;
 
 	abstract public FORMAT getFormat();
 
-	public boolean isEditable() {
-		return editable;
+	public BaseView(){
+		data = new HashMap<>();
 	}
 
-	public void setEditable(boolean editable) {
-		this.editable = editable;
-	}
-
-	public Object getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
 
 	public void setData(Object data) {
-		this.data = data;
+		this.data.put("content", data);
 	}
 
 	public class ViewException extends WebTreeException{

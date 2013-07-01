@@ -5,8 +5,6 @@ import org.webtree.Page.DAO.PageDAO;
 import org.webtree.Page.View.PageView;
 import org.webtree.System.Router;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,14 +19,14 @@ public class PageController extends BaseModuleController {
 
 	protected static final String defaultPageName = "main";
 
-	protected enum AvailablePages{main, about, currentStage}
+	protected enum AvailablePages{main, about, currentStage, rootTeam, freeIdea, rate, worksnet}
 
 	public PageController() {
 		pageDAO = new PageDAO();
 	}
 
 	@Override
-	public String process(List<String> params) throws Router.RedirectSystemError, IOException, Router.RedirectPageNotFound, SQLException {
+	public String process(List<String> params) {
 //		PageModel pageModel;
 
 //		try {

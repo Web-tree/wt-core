@@ -1,4 +1,4 @@
-package org.webtree.Site.PersonalPage;
+package org.webtree.site.PersonalPage;
 
 import org.webtree.Base.BaseModule.BaseModuleView;
 

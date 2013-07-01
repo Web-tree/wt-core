@@ -38,11 +38,15 @@ public class WtDb {
 		}
 	}
 
-	public static void rollback() throws SQLException {
-		connect.rollback();
-		transact--;
-		if (transact < 1) {
-			connect.setAutoCommit(true);
+	public static void rollback() {
+		try {
+			connect.rollback();
+			transact--;
+			if (transact < 1) {
+				connect.setAutoCommit(true);
+			}
+		} catch (SQLException e) {
+			throw new SqlError(e);
 		}
 	}
 
@@ -61,6 +65,12 @@ public class WtDb {
 		} catch (SQLException e) {
 			Log.getInst().debug(e.getMessage());
 			throw new LoggedError("Can't connect to DB.", e);
+		}
+	}
+
+	public static class SqlError extends Error{
+		public SqlError(Throwable cause) {
+			super(cause);
 		}
 	}
 }

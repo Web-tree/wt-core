@@ -2,7 +2,8 @@ package org.webtree.System;
 
 import org.webtree.Language.Controller.LanguageController;
 import org.webtree.Link.Model.LinkModel;
-import org.webtree.Site.Controller.FrontController;
+import org.webtree.System.Exception.WebTreeRuntime;
+import org.webtree.site.controllers.FrontController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,15 +64,15 @@ public class Router extends HttpServlet {
 			result = front.parsePage();
 			out.print(result + "\n <!--Process time: " + (System.currentTimeMillis() - start)+" ms-->");
 		} catch (BaseForward e) {
-			Log.getInst().debug("page not found. url: {} \n exception: {}", e.getUrl(), e);
+			Log.getInst().debug("Page not found. url: {}}", e.getUrl(), e);
 			forward(e.getUrl(), e.getStatus());
 		} catch (BaseRedirect e) {
-			Log.getInst().debug("Redirect. url: {} \n exception: {}", e.getUrl(), e);
+			Log.getInst().debug("Redirect. url: {}", e.getUrl(), e);
 			doRedirect(e.getUrl(), e.getStatus());
 		} catch (Error | Exception e) {
-			Log.getInst().error("System error exception: {}", e);
-			throw new IOException(e);
-//			forward("/500.jsp", 500);
+			Log.getInst().error("System error", e);
+//			throw new IOException(e);
+			forward("/500.jsp", 500);
 		} finally {
 			front.destruct();
 		}
@@ -120,7 +121,7 @@ public class Router extends HttpServlet {
 		return out;
 	}
 
-	public static class BaseRedirect extends Exception {
+	public static class BaseRedirect extends RoutedException {
 		String url;
 		int status = HttpServletResponse.SC_MOVED_TEMPORARILY;
 
@@ -132,6 +133,8 @@ public class Router extends HttpServlet {
 			return status;
 		}
 	}
+
+	public static class RoutedException extends WebTreeRuntime {}
 
 	public static class Redirect extends BaseRedirect {
 		public Redirect(String url) {
@@ -162,6 +165,10 @@ public class Router extends HttpServlet {
 
 		public RedirectSystemError() {
 
+		}
+
+		public RedirectSystemError(Throwable t) {
+			Log.getInst().error("System error", t);
 		}
 	}
 

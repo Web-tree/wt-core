@@ -51,9 +51,9 @@ public class Auth extends SqlDAO {
 		}
 	}
 
-	public void needAuth() throws NeedAuth {
+	public void needAuth() {
 		if (!this.isAuthorized()) {
-			throw new NeedAuth();
+			throw new AuthRequired();
 		}
 	}
 
@@ -88,9 +88,9 @@ public class Auth extends SqlDAO {
 		return (AbstractAuthModel) Session.getAttribute(sessionAttrName);
 	}
 
-	public AuthModel getAuthModel() throws NeedAuth {
+	public AuthModel getAuthModel() {
 		if (!isAuthorized()) {
-			throw new NeedAuth();
+			throw new AuthRequired();
 		}
 		return (AuthModel) Session.getAttribute(sessionAttrName);
 	}
@@ -99,7 +99,7 @@ public class Auth extends SqlDAO {
 		PreparedStatement statement;
 		try {
 			statement = getStatement("SELECT \"humanId\", \"loginId\" FROM auth.login WHERE email = ? AND password = ?");
-		} catch (SQLException e) {
+		} catch (SqlDAOError e) {
 			Log.getInst().debug(e.getMessage());
 			throw new LoggedError(e);
 		}
@@ -202,8 +202,8 @@ public class Auth extends SqlDAO {
 		}
 	}
 
-	public static class NeedAuth extends MessageException.ErrorMessage {
-		public NeedAuth() {
+	public static class AuthRequired extends MessageException.ErrorMessage {
+		public AuthRequired() {
 			super("Требуется авторизация");
 		}
 	}

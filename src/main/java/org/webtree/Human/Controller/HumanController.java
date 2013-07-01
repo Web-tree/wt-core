@@ -3,6 +3,7 @@ package org.webtree.Human.Controller;
 import org.webtree.Base.BaseModule.BaseModuleController;
 import org.webtree.Human.DAO.HumanDAO;
 import org.webtree.Human.Model.HumanModel;
+import org.webtree.Human.View.HumanEditView;
 import org.webtree.Human.View.HumanListView;
 import org.webtree.Human.View.HumanOneView;
 import org.webtree.Human.View.HumanView;
@@ -10,9 +11,9 @@ import org.webtree.Link.Model.LinkModel;
 import org.webtree.Node.DAO.NodeDAO;
 import org.webtree.System.Exception.ItemNotFound;
 import org.webtree.System.Exception.MessageException;
+import org.webtree.System.Registry;
 import org.webtree.System.Router;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class HumanController extends BaseModuleController {
 		humanDAO = new HumanDAO();
 	}
 
-	public int create(String name) throws SQLException {
+	public int create(String name) {
 		HumanModel humanModel = new HumanModel(name);
 		return humanDAO.create(humanModel);
 	}
@@ -48,21 +49,25 @@ public class HumanController extends BaseModuleController {
 	}
 
 	@Override
-	public String process(List<String> params) throws Router.BaseRedirect, IOException {
+	public String process(List<String> params) {
 		HumanView view = null;
 		try {
 			switch (getActionByParam(params)) {
+				case "":
+					throw new Router.Redirect(new LinkModel("human/list").buildUrl());
 				case "list":
 					view = new HumanListView(getViewFormat());
 					view.setData(humanDAO.getHumanList());
 					break;
 				case "save":
-
+					Registry.getInst().getRequestParam("");
 					break;
-				case "":
-					throw new Router.Redirect(new LinkModel("human/list").buildUrl());
+				case "edit":
+					view = new HumanEditView(getViewFormat());
 				default:
-					view = new HumanOneView(getViewFormat());
+					if (view == null){
+						view = new HumanOneView(getViewFormat());
+					}
 					int humanId = Integer.parseInt(params.get(1));
 					Map<String, Object> content = new HashMap<>();
 					HumanModel humanModel = humanDAO.get(humanId);

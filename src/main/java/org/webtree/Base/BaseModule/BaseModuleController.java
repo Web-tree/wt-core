@@ -4,12 +4,8 @@ import org.webtree.Base.MVC.BaseController;
 import org.webtree.Base.MVC.BaseView;
 import org.webtree.Language.Model.LanguageModel;
 import org.webtree.System.Auth;
-import org.webtree.System.Exception.MessageException;
 import org.webtree.System.Helpers.RequestHelper;
-import org.webtree.System.Router;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -56,9 +52,9 @@ abstract public class BaseModuleController extends BaseController {
 		boolean editAvailable = false;
 		try{
 			editAvailable = Auth.getInst().getAuthModel().getHumanId() == humanId;
-		} catch (Auth.NeedAuth ignored) {}
+		} catch (Auth.AuthRequired ignored) {}
 		return editAvailable;
 	}
 
-	abstract public String process(List<String> params) throws IOException, Router.BaseRedirect, SQLException, MessageException.ErrorMessage;
+	abstract public String process(List<String> params);
 }

@@ -1,4 +1,4 @@
-package org.webtree.Site.Controller;
+package org.webtree.site.controllers;
 
 import org.webtree.Auth.Controller.AuthController;
 import org.webtree.Base.BaseModule.BaseModuleController;
@@ -8,7 +8,6 @@ import org.webtree.Language.Controller.LanguageController;
 import org.webtree.Language.Model.LanguageModel;
 import org.webtree.Node.Controller.NodeController;
 import org.webtree.Page.Controller.PageController;
-import org.webtree.Site.PersonalPage.PersonalPageController;
 import org.webtree.System.Auth;
 import org.webtree.System.Exception.LoggedError;
 import org.webtree.System.Exception.MessageException;
@@ -17,6 +16,7 @@ import org.webtree.System.Helpers.ArrayHelper;
 import org.webtree.System.Log;
 import org.webtree.System.Registry;
 import org.webtree.System.Router;
+import org.webtree.site.PersonalPage.PersonalPageController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

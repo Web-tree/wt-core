@@ -1,11 +1,7 @@
 package org.webtree.Category.Controller;
 
 import org.webtree.Base.BaseModule.BaseModuleController;
-import org.webtree.System.Exception.MessageException;
-import org.webtree.System.Router;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -15,7 +11,7 @@ import java.util.List;
  */
 public class CategoryController extends BaseModuleController {
 	@Override
-	public String process(List<String> params) throws Router.RedirectSystemError, IOException, Router.RedirectPageNotFound, Router.Redirect, SQLException, MessageException.ErrorMessage {
+	public String process(List<String> params) {
 		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }

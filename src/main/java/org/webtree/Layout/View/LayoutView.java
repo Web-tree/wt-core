@@ -3,7 +3,7 @@ package org.webtree.Layout.View;
 import org.webtree.Base.BaseModule.HtmlView;
 import org.webtree.Menu.Model.MenuModelList;
 
-import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author lucifer
@@ -32,8 +32,8 @@ public class LayoutView extends HtmlView {
 	}
 
 	@Override
-	protected HashMap<String, Object> getDefaultMap(Object object) {
-		HashMap<String, Object> data = super.getDefaultMap(object);
+	protected Map<String, Object> getDefaultMap() {
+		Map<String, Object> data = super.getDefaultMap();
 		data.put("menu", MenuModelList.getMenu());
 		return data;
 	}

@@ -16,7 +16,7 @@ import java.sql.Statement;
  *         Time: 14:04
  */
 public class AuthDAO extends SqlDAO {
-	public AuthModel createLogin(String login, String password, int humanId) throws LoginExists, SQLException, LoginIncorrect {
+	public AuthModel createLogin(String login, String password, int humanId) throws LoginExists, LoginIncorrect, SqlDAOError {
 		checkLogin(login);
 		try {
 			PreparedStatement statement = getStatement("INSERT INTO auth.email(email, password, \"humanId\") VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -37,12 +37,12 @@ public class AuthDAO extends SqlDAO {
 			if (e.getSQLState().equals(SQLSTATE_DUPLICATE)) {
 				throw new LoginExists();
 			} else {
-				throw e;
+				throw new SqlDAOError(e);
 			}
 		}
 	}
 
-	public void checkLogin(String login) throws LoginIncorrect, SQLException, LoginExists {
+	public void checkLogin(String login) throws LoginIncorrect, LoginExists, SqlDAOError {
 		try {
 			FormatHelper.assertLogin(login);
 		} catch (FormatHelper.LoginAssertFail loginAssertFail) {
@@ -54,10 +54,14 @@ public class AuthDAO extends SqlDAO {
 		}
 	}
 
-	public boolean checkLoginExists(String login) throws SQLException {
-		PreparedStatement statement = getStatement("SELECT 1 FROM auth.login WHERE email = ?");
-		statement.setString(1, login);
-		return statement.executeQuery().next();
+	public boolean checkLoginExists(String login) throws SqlDAOError {
+		try {
+			PreparedStatement statement = getStatement("SELECT 1 FROM auth.login WHERE email = ?");
+			statement.setString(1, login);
+			return statement.executeQuery().next();
+		} catch (SQLException e) {
+			throw new SqlDAOError(e);
+		}
 	}
 
 	abstract public static class AuthException extends WebTreeException {

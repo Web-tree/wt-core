@@ -56,7 +56,7 @@ public class NodeDAO extends SqlDAO {
 		statement.execute();
 	}
 
-	public NodeModel get(int id) throws SqlDAOException, NodeNotFound {
+	public NodeModel get(int id) throws SqlDAOError, NodeNotFound {
 		PreparedStatement statement = null;
 		try {
 			statement = getStatement(getStatement);
@@ -69,7 +69,7 @@ public class NodeDAO extends SqlDAO {
 			}
 			return buildModel(resultSet);
 		} catch (SQLException e) {
-			throw new SqlDAOException(e);
+			throw new SqlDAOError(e);
 		}
 
 	}
@@ -84,7 +84,7 @@ public class NodeDAO extends SqlDAO {
 			String sql = "SELECT * FROM node LIMIT " + nodesOnPage + "OFFSET " + offset;
 
 			return buildModelList(getStatement(sql));
-		} catch (SQLException | SqlDAOException e) {
+		} catch (SqlDAOError e) {
 			Log.getInst().debug("asd", e);
 			throw new NodeException();
 		}
@@ -101,7 +101,7 @@ public class NodeDAO extends SqlDAO {
 			PreparedStatement statement = getStatement(sql);
 			statement.setInt(1, humanId);
 			return buildModelList(statement);
-		} catch (SQLException | SqlDAOException e) {
+		} catch (SQLException | SqlDAOError e) {
 			Log.getInst().debug("qwe", e);
 			throw new NodeException();
 		}
@@ -125,7 +125,7 @@ public class NodeDAO extends SqlDAO {
 		statement.execute();
 	}
 
-	protected NodeModelList buildModelList(PreparedStatement statement) throws SqlDAOException {
+	protected NodeModelList buildModelList(PreparedStatement statement) throws SqlDAOError {
 		ResultSet result = null;
 		try {
 			result = statement.executeQuery();
@@ -136,12 +136,12 @@ public class NodeDAO extends SqlDAO {
 			}
 			return list;
 		} catch (SQLException e) {
-			throw new SqlDAOException(e);
+			throw new SqlDAOError(e);
 		}
 
 	}
 
-	protected NodeModel buildModel(ResultSet resultSet) throws SqlDAOException {
+	protected NodeModel buildModel(ResultSet resultSet) throws SqlDAOError {
 		try {
 			NodeModel nodeModel = new NodeModel();
 			nodeModel.setId(Integer.parseInt(resultSet.getString("nodeId")));
@@ -159,7 +159,7 @@ public class NodeDAO extends SqlDAO {
 			}
 			return nodeModel;
 		} catch (SQLException e) {
-			throw new SqlDAOException(e);
+			throw new SqlDAOError(e);
 		}
 	}
 

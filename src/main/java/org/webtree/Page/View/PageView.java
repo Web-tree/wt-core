@@ -33,7 +33,7 @@ public class PageView extends BaseModuleView {
 
     @Override
 	protected String parseView(){
-		return processTemplate(getData(), getTemplate(template, "module/page"));
+		return processTemplate(getTemplate(template, "module/page"));
 	}
 
 	public PageView(FORMAT format, String template) {
