@@ -17,9 +17,9 @@ public class PageController extends BaseModuleController {
 	protected PageDAO pageDAO;
 	protected HashMap<String, PageView> pageView = new HashMap<>();
 
-	protected static final String defaultPageName = "main";
+	protected static final AvailablePages defaultPageName = AvailablePages.main;
 
-	protected enum AvailablePages{main, about, currentStage, rootTeam, freeIdea, rate, worksnet}
+	protected enum AvailablePages{main, about, currentStage, rootTeam, freeIdea, rate, worksnet, webTree}
 
 	public PageController() {
 		pageDAO = new PageDAO();
@@ -39,9 +39,13 @@ public class PageController extends BaseModuleController {
 //			throw new Router.RedirectPageNotFound();
 //		}
 
-		String page;
+		AvailablePages page;
 		try{
-			page = params.get(1);
+			try{
+				page = AvailablePages.valueOf(AvailablePages.class, params.get(1));
+			} catch (IllegalArgumentException e){
+				throw new Router.RedirectPageNotFound();
+			}
 		} catch (IndexOutOfBoundsException e) {
 			page = defaultPageName;
 		}
@@ -54,13 +58,9 @@ public class PageController extends BaseModuleController {
 		return view.parse();
 	}
 
-	protected PageView getPageView(String templateName) throws Router.RedirectPageNotFound {
-		try{
-			AvailablePages.valueOf(AvailablePages.class, templateName);
-		} catch (IllegalArgumentException e){
-			throw new Router.RedirectPageNotFound();
-		}
-		if (!pageView.containsKey(templateName)) {
+	protected PageView getPageView(AvailablePages template) throws Router.RedirectPageNotFound {
+		String templateName = template.toString();
+		if (!pageView.containsKey(template)) {
 			pageView.put(templateName, new PageView(getViewFormat(), templateName));
 		}
 		return pageView.get(templateName);

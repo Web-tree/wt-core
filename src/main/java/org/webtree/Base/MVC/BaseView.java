@@ -6,11 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Lucifer
  * Date: 16.04.12
  * Time: 13:23
- * To change this template use File | Settings | File Templates.
  */
 abstract public class BaseView {
 	public enum FORMAT {

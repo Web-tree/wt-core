@@ -13,13 +13,13 @@ import java.util.HashMap;
  *         Time: 8:32
  */
 public class Log {
-	protected static HashMap<String, Logger> loggers = new HashMap<String, Logger>();
+	protected static HashMap<String, Logger> loggers = new HashMap<>();
 
 	public static Logger getInst() {
 		String name;
 		try {
 			name = ProjectSettings.get("isDev").equals("true") ? "dev" : "production";
-		} catch (Error e) {
+		} catch (Throwable e) {
 			name = "production";
 			e.printStackTrace();
 		}

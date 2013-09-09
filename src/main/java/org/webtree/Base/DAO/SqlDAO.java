@@ -53,10 +53,14 @@ public class SqlDAO {
 
 	protected static PreparedStatement getStatement(String statement) throws SqlDAOError {
 		if (!statementsMap.containsKey(statement)) {
-			try {
-				statementsMap.put(statement, getConnect().prepareStatement(statement));
-			} catch (SQLException e) {
-				throw new SqlDAOError(e);
+			synchronized (statementsMap){
+				if (!statementsMap.containsKey(statement)) {
+					try {
+						statementsMap.put(statement, getConnect().prepareStatement(statement));
+					} catch (SQLException e) {
+						throw new SqlDAOError(e);
+					}
+				}
 			}
 		}
 		return statementsMap.get(statement);

@@ -16,6 +16,7 @@ import org.webtree.System.Helpers.ArrayHelper;
 import org.webtree.System.Log;
 import org.webtree.System.Registry;
 import org.webtree.System.Router;
+import org.webtree.form.controller.FormController;
 import org.webtree.site.PersonalPage.PersonalPageController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,6 +70,9 @@ public class FrontController extends BaseController {
 			case "auth":
 				controller = new AuthController();
 				break;
+			case "form":
+				controller = new FormController();
+				break;
 //			case "activity":
 //				controller = new ActivityController();
 //				break;
@@ -90,7 +94,7 @@ public class FrontController extends BaseController {
 
 	public String parsePage() throws Router.BaseRedirect, IOException, SQLException, MessageException.ErrorMessage {
 		Registry registry = Registry.getInst();
-		Log.getInst().debug("Registry: " + registry);
+//		Log.getInst().debug("Registry: " + registry);
 		return controller.process(getParams());
 	}
 

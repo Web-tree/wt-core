@@ -125,7 +125,7 @@ public class NodeController extends BaseModuleController {
 		NodeModel nodeModel = new NodeModel();
 		nodeModel.setOwnerId(Auth.getInst().getAuthModel().getHumanId());
 		try {
-			nodeModel.setTitle((String) RequestHelper.getParam("title"));
+			nodeModel.setTitle(RequestHelper.getParam("title"));
 		} catch (NodeModel.NodeModelError nodeModelError) {
 			throw new CreateError(nodeModelError.getMessage());
 		}

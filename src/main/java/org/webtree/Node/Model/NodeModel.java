@@ -45,7 +45,7 @@ public class NodeModel extends BaseModuleModel {
 	}
 
 	public void setTitle(String title) throws NodeModelError {
-		if (title == "") {
+		if (title.equals("")) {
 			throw new NodeModelError("Заголовок не может быть пустым");
 		}
 		this.title = title;
@@ -66,7 +66,7 @@ public class NodeModel extends BaseModuleModel {
 	}
 
 	public HashMap<String, Object> toHashMap() {
-		HashMap<String, Object> hashMap = new HashMap<String, Object>();
+		HashMap<String, Object> hashMap = new HashMap<>();
 		hashMap.put("ownerId", Integer.toString(ownerId));
 		return hashMap;
 	}

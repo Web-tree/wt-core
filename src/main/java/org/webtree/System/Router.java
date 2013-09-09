@@ -69,7 +69,7 @@ public class Router extends HttpServlet {
 		} catch (BaseRedirect e) {
 			Log.getInst().debug("Redirect. url: {}", e.getUrl(), e);
 			doRedirect(e.getUrl(), e.getStatus());
-		} catch (Error | Exception e) {
+		} catch (Throwable e) {
 			Log.getInst().error("System error", e);
 //			throw new IOException(e);
 			forward("/500.jsp", 500);

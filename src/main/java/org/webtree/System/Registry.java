@@ -2,6 +2,7 @@ package org.webtree.System;
 
 import org.webtree.Human.Model.HumanModel;
 import org.webtree.Language.Model.LanguageModel;
+import org.webtree.System.Helpers.FormatHelper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,11 +23,7 @@ public class Registry {
 
 	public static Registry getInst() {
 		if (inst.get() == null) {
-			synchronized (inst) {
-				if (inst.get() == null) {
-					inst.set(new Registry());
-				}
-			}
+			inst.set(new Registry());
 		}
 		return inst.get();
 	}
@@ -36,8 +33,12 @@ public class Registry {
 	}
 
 	public String getRequestParam(String name, String defaultValue) {
-		String value = getRequest().getParameter(name);
-		return value == null ? defaultValue : value;
+		String value = getRawRequestParam(name);
+		return value == null ? defaultValue : FormatHelper.clearHtml(value);
+	}
+
+	public String getRawRequestParam(String name) {
+		return getRequest().getParameter(name);
 	}
 
 	public HttpServletRequest getRequest() {
