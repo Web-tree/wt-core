@@ -31,6 +31,10 @@ public class Log {
 		return getInst(name);
 	}
 
+    public static Logger getInst(Class clazz) {
+        return getInst(clazz.getCanonicalName());
+    }
+
 	public static Logger getInst(String name) {
 		if (!loggers.containsKey(name)) {
 			loggers.put(name, LoggerFactory.getLogger(name));
