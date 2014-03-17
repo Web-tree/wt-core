@@ -6,4 +6,22 @@ package org.webtree.System.Exception;
  *         Time: 16:37
  */
 public class WebTreeRuntimeException extends RuntimeException {
+    public WebTreeRuntimeException() {
+    }
+
+    public WebTreeRuntimeException(String message) {
+        super(message);
+    }
+
+    public WebTreeRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public WebTreeRuntimeException(Throwable cause) {
+        super(cause);
+    }
+
+    public WebTreeRuntimeException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }
