@@ -13,17 +13,16 @@ import java.util.HashMap;
  */
 public class HumanModel extends BaseModuleModel {
 	protected int id;
-	protected String name;
+    protected int rate;
+    protected String name;
 
-	public int getRate() {
+    public int getRate() {
 		return rate;
 	}
 
 	public void setRate(int rate) {
 		this.rate = rate;
 	}
-
-	protected int rate;
 
 	public int getId() {
 		return id;
